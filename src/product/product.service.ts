@@ -9,14 +9,29 @@ export class ProductService {
 
   constructor(@InjectModel('Product') private readonly productModel: Model<Product>) {}
 
-  getProducts() {}
+  async getProducts(): Promise<Product[]> {
+    const products = await this.productModel.find()
+    return products
+  }
 
-  getProduct() {}
+  async getProduct(productID: string): Promise<Product> {
+    const product = await this.productModel.findById(productID)
+    return product
+  }
 
-  createProduct() {}
+  async createProduct(createProductDTO: CreateProductDTO): Promise<Product> {
+    const newProduct = new this.productModel(createProductDTO)
+    return await newProduct.save()
+  }
 
-  deleteProduct() {}
+  async deleteProduct(productID: string): Promise<Product> {
+    const deletedProduct = await this.productModel.findByIdAndDelete(productID)
+    return deletedProduct
+  }
 
-  updateProduct() {}
+  async updateProduct(productID: string, createProductDTO: CreateProductDTO): Promise<Product> {
+    const updatedProduct = await this.productModel.findByIdAndUpdate(productID, createProductDTO, {new: true})
+    return updatedProduct
+  }
 
 }
